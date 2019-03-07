@@ -1,28 +1,37 @@
 # init_db.py
 from sqlalchemy import create_engine, MetaData
 
-from settings import config
-from models import question, choice
+from aiohttpdemo_polls.settings import config
+from aiohttpdemo_polls.db import perimeter, device, states_dev
 
 
 DSN = "postgresql://{user}:{password}@{host}:{port}/{database}"
 
 def create_tables(engine):
     meta = MetaData()
-    meta.create_all(bind=engine, tables=[question, choice])
+    meta.create_all(bind=engine, tables=[perimeter, device, states_dev])
 
 
 def sample_data(engine):
     conn = engine.connect()
-    conn.execute(question.insert(), [
-        {'question_text': 'What\'s new?',
-         'pub_date': '2015-12-15 17:17:49.629+02'}
+    conn.execute(perimeter.insert(), [
+        {'number': 1,
+         'enabled': 1,
+         'time_last_change_state': '2019-03-15 20:00:12.629+02'}
     ])
-    conn.execute(choice.insert(), [
-        {'choice_text': 'Not much', 'votes': 0, 'question_id': 1},
-        {'choice_text': 'The sky', 'votes': 0, 'question_id': 1},
-        {'choice_text': 'Just hacking again', 'votes': 0, 'question_id': 1},
+    conn.execute(device.insert(), [
+        {'address': '11', 'perimeter_id': 1, 'configuration': 72, 'enabled': 1},
+        {'address': '12', 'perimeter_id': 1, 'configuration': 72, 'enabled': 1},
     ])
+    conn.execute(states_dev.insert(), [
+        {'device_address': '11', 'states_of_rays': ('n'*72),
+         'power': 100, 'pub_date': '2000-12-15 10:46:49.112+02'},
+        {'device_address': '11', 'states_of_rays': ('n'*72),
+         'power': 100, 'pub_date': '2015-12-15 15:30:51.234+02'},
+        {'device_address': '12', 'states_of_rays': ('n'*72),
+         'power': 100, 'pub_date': '2019-03-15 20:00:12.629+02'},
+    ])
+
     conn.close()
 
 

@@ -1,8 +1,8 @@
 # polls.yaml
 postgres:
   database: aiohttpdemo_polls
-  user: aiohttpdemo_user
-  password: aiohttpdemo_pass
+  user: postgres
+  password: nbhyfyjun
   host: localhost
   port: 5432
   minsize: 1
