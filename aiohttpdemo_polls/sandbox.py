@@ -3,7 +3,7 @@ import aiopg.sa
 from sqlalchemy import (
     MetaData, Table, Column, ForeignKey,
     Integer, String, Date, Boolean, Float, create_engine,
-    select, delete, insert
+    select, delete, insert,bindparam
 )
 
 meta = MetaData()
@@ -113,3 +113,9 @@ for row in con.execute(state_dev.select()):
      print(row)
 
 print('=============MATCH===========')
+#con.execute(select().where(state_dev.c.device_id == 11))
+select_stmt = select([state_dev]).\
+                     where(state_dev.c.device_id == 11)
+s = con.execute(select_stmt).fetchall()
+for row in s:
+     print(row)
