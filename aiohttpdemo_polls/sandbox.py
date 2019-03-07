@@ -2,7 +2,8 @@
 import aiopg.sa
 from sqlalchemy import (
     MetaData, Table, Column, ForeignKey,
-    Integer, String, Date, Boolean, Float, create_engine, select
+    Integer, String, Date, Boolean, Float, create_engine,
+    select, delete, insert
 )
 
 meta = MetaData()
@@ -30,7 +31,7 @@ device = Table(
     Column('enabled', Boolean, nullable=False)
 )
 
-states_dev = Table(
+state_dev = Table(
     'state_of_device', meta,
 
     Column('id', Integer, primary_key=True),
@@ -82,23 +83,33 @@ def connect(user, password, db, host='localhost', port=5432):
     return con, meta
 
 
+def st_dev_sample_push():
+    con.execute(state_dev.insert(), [
+        {'device_id': '11', 'states_of_rays': ('n' * 72),
+         'power': 100, 'pub_date': '2000-12-15 10:46:49.112+02'},
+        {'device_id': '11', 'states_of_rays': ('n' * 72),
+         'power': 100, 'pub_date': '2015-12-19 15:30:51.234+02'},
+        {'device_id': '12', 'states_of_rays': ('n' * 72),
+         'power': 100, 'pub_date': '2019-03-19 20:00:12.629+02'},
+    ])
+
+
+def del_st_dev():
+    con.execute(state_dev.delete())
+
+
+def del_all_tabs():
+    con.execute(perimeter.delete())
+    con.execute(device.delete())
+    con.execute(state_dev.delete())
+
 
 con, meta = connect('postgres', 'nbhyfyjun', 'aiohttpdemo_polls')
 print(con)
 print(meta)
 
-con.execute(states_dev.insert(), [
-    {'device_address': 11, 'states_of_rays': ('n' * 72),
-     'power': 100, 'pub_date': '2019-12-15 10:46:49.112+02'},
-    {'device_address': 11, 'states_of_rays': ('n' * 72),
-     'power': 100, 'pub_date': '2019-12-15 15:30:51.234+02'},
-    {'device_address': 12, 'states_of_rays': ('n' * 72),
-     'power': 100, 'pub_date': '2019-03-15 20:00:12.629+02'},
-])
+print('=============ALL COL===========')
+for row in con.execute(state_dev.select()):
+     print(row)
 
-cursor = con.execute(states_dev.select()).fetchall()
-print(cursor[10])
-
-#for row in con.execute(states_dev.select()):
-#     print(row)
-#clause = states_dev.select().where(states_dev.c.year == 2019)
+print('=============MATCH===========')

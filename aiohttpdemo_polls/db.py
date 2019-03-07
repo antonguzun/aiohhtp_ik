@@ -21,7 +21,7 @@ perimeter = Table(
 device = Table(
     'device', meta,
 
-    Column('id', Integer, primary_key=True),
+    Column('id', Integer, primary_key=True, nullable=False),
     Column('address', Integer, nullable=False),
     Column('perimeter_id',
            Integer,
@@ -30,14 +30,15 @@ device = Table(
     Column('enabled', Boolean, nullable=False)
 )
 
-states_dev = Table(
+state_dev = Table(
     'state_of_device', meta,
 
-    Column('id', Integer, primary_key=True),
+    Column('id', Integer, primary_key=True, nullable=False),
     Column('device_id',
            Integer,
-           ForeignKey('device.id', ondelete='CASCADE')),
-    Column('states_of_rays', String(144), nullable=False),
+           ForeignKey('device.id', ondelete='CASCADE'),
+           nullable=False),
+    Column('states_of_rays', String(72), nullable=False),
     Column('power', Float, nullable=False),
     Column('pub_date', Date, nullable=False)
 )
