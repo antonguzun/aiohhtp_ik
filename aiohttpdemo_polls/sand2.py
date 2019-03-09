@@ -1,8 +1,11 @@
-import re
+from aiohttp import web
+import json
 
-a = re.match(r'2015-..-..', '2014-12-15 15:30:51.234+02')
-print(a)
-if a != None:
-    print(True)
-else:
-    print(False)
+async def handle(request):
+    response_obj = { 'status' : 'success' }
+    return web.Response(text=json.dumps(response_obj))
+
+app = web.Application()
+app.router.add_get('/', handle)
+
+web.run_app(app)
