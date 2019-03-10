@@ -104,7 +104,7 @@ def del_all_tabs():
     con.execute(state_dev.delete())
 
 
-con, meta = connect('postgres', 'nbhyfyjun', 'aiohttpdemo_polls')
+con, meta = connect('postgres', '1234', 'aiohttpdemo_polls')
 print(con)
 print(meta)
 

@@ -2,7 +2,7 @@
 postgres:
   database: aiohttpdemo_polls
   user: postgres
-  password: nbhyfyjun
+  password: 1234
   host: localhost
   port: 5432
   minsize: 1
