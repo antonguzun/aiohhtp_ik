@@ -2,7 +2,7 @@
 import aiopg.sa
 from sqlalchemy import (
     MetaData, Table, Column, ForeignKey,
-    Integer, String, Date, Boolean, Float
+    Integer, String, Date, DateTime, Boolean, Float
 )
 
 meta = MetaData()
@@ -14,7 +14,7 @@ perimeter = Table(
     Column('id', Integer, primary_key=True),
     Column('number', Integer, nullable=False),
     Column('enabled', Boolean, nullable=False),               #1 - on, 0 - off
-    Column('time_last_change_state', Date, nullable=False)
+    Column('time_last_change_state', DateTime, nullable=False)
 )
 
 
@@ -40,7 +40,7 @@ state_dev = Table(
            nullable=False),
     Column('states_of_rays', String(72), nullable=False),
     Column('power', Float, nullable=False),
-    Column('pub_date', Date, nullable=False)
+    Column('pub_date', DateTime, nullable=False)
 )
 
 

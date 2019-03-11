@@ -5,6 +5,7 @@ from sqlalchemy import (
     Integer, String, Date, Boolean, Float, create_engine,
     select, delete, insert,bindparam
 )
+import datetime
 
 meta = MetaData()
 
@@ -114,8 +115,28 @@ for row in con.execute(state_dev.select()):
 
 print('=============MATCH===========')
 #con.execute(select().where(state_dev.c.device_id == 11))
-select_stmt = select([state_dev]).\
-                     where(state_dev.c.device_id == 11)
-s = con.execute(select_stmt).fetchall()
-for row in s:
+
+cursor = con.execute(state_dev.select())
+#cursor = con.execute(state_dev.select())
+d = datetime.datetime(2019,1,10)
+d1 = datetime.datetime.now()
+print('time1:', d.timestamp())
+print('time2:', d1.timestamp())
+print(d)
+print(type(d))
+
+for row in cursor:
      print(row)
+     print(row[4])
+     print(type(row[4]))
+     if(row[4] < d):
+         print('ok')
+     else:
+         print('not ok')
+
+print('time:',d)
+print('timestamp: ', d.timestamp())
+k = d.timestamp()
+
+j = datetime.datetime.fromtimestamp(k)
+print(j)
