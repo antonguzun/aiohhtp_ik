@@ -31,18 +31,21 @@ async def req_state_of_dev(request):
         start = request.query['start']
         stop = request.query['stop']
         #start = 1547067600
-        #stop = 1552313501
+        #stop = 1555313501
         dstart = datetime.datetime.fromtimestamp(int(start))
         dstop = datetime.datetime.fromtimestamp(int(stop))
         print("req address is:", address)
         try:
             if address == 'None':
-                cursor = await conn.execute(db.state_dev.select())
+                cursor = await conn.execute(db.state_dev.select()\
+                                            .where(db.state_dev.c.pub_date > dstart)\
+                                            .where(db.state_dev.c.pub_date < dstop))
             else:
-                cursor = await conn.execute(db.state_dev.select().where(db.state_dev.c.device_id == address))
+                cursor = await conn.execute(db.state_dev.select()\
+                                            .where(db.state_dev.c.device_id == address)\
+                                            .where(db.state_dev.c.pub_date > dstart)\
+                                            .where(db.state_dev.c.pub_date < dstop))
 
-            cursor = await conn.execute(
-                db.state_dev.select().where(db.state_dev.c.pub_date > dstart))
             records = await cursor.fetchall()
             for row in records:
                 print(row)
