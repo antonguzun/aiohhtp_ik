@@ -58,7 +58,7 @@ class ScraperServer:
             async with engine.acquire() as conn:
                 for i in CONST_ARR:
                     data = get_frame(i)
-                    print(data)
+                    #print(data)
                     await conn.execute(db.state_dev.insert().values(device_id=data['address'],
                            states_of_rays=data['rays'], power=data['power'], pub_date=data['time']))
                     #a = await conn.execute(db.state_dev.select())
