@@ -58,5 +58,3 @@ async def req_state_of_dev(request):
             return web.Response(text=json.dumps(response_obj), status=500)
 
 
-
-

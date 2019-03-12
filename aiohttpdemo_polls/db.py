@@ -4,6 +4,7 @@ from sqlalchemy import (
     MetaData, Table, Column, ForeignKey,
     Integer, String, Date, DateTime, Boolean, Float
 )
+import datetime
 
 meta = MetaData()
 
@@ -62,8 +63,12 @@ async def close_pg(app):
     await app['db'].wait_closed()
 
 
-async def get_state_of_device(address, conn):
-    pass
+async def insert_data(data, engine):
+    async with engine.acquire() as conn:
+            await conn.execute(state_dev.insert(), [
+            {'device_id': data['address'], 'states_of_rays': data['rays'],
+            'power': data['power'], 'pub_date': data['time']},
+        ])
 
 
 

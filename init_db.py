@@ -27,8 +27,15 @@ def sample_data(engine):
          'time_last_change_state': '2019-03-15 20:00:12.629+02'}
     ])
     conn.execute(device.insert(), [
-        {'id': 11, 'address': '11', 'perimeter_id': 1, 'configuration': 72, 'enabled': 1},
-        {'id': 12, 'address': '12', 'perimeter_id': 1, 'configuration': 72, 'enabled': 1},
+        {'id': 1, 'address': '11', 'perimeter_id': 1, 'configuration': 72, 'enabled': 1},
+        {'id': 2, 'address': '12', 'perimeter_id': 1, 'configuration': 72, 'enabled': 1},
+        {'id': 3, 'address': '13', 'perimeter_id': 1, 'configuration': 72, 'enabled': 1},
+        {'id': 4, 'address': '14', 'perimeter_id': 1, 'configuration': 72, 'enabled': 1},
+        {'id': 5, 'address': '15', 'perimeter_id': 1, 'configuration': 72, 'enabled': 1},
+        {'id': 6, 'address': '16', 'perimeter_id': 1, 'configuration': 72, 'enabled': 1},
+        {'id': 7, 'address': '17', 'perimeter_id': 1, 'configuration': 72, 'enabled': 1},
+        {'id': 8, 'address': '18', 'perimeter_id': 1, 'configuration': 72, 'enabled': 1},
+
     ])
     conn.execute(state_dev.insert(), [
         {'device_id': '11', 'states_of_rays': ('n'*72),

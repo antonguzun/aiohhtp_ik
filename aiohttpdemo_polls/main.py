@@ -6,8 +6,10 @@ import requests
 
 from settings import config
 from routes import setup_routes
-from db import close_pg, init_pg
+import db
+from com.__main__ import get_frame
 
+CONST_ARR = [i for i in range(11,19)]
 
 async def post_request(url, json, proxy=None):
     async with ClientSession() as client:
@@ -51,14 +53,16 @@ class ScraperServer:
         if return_value:
             self.data_to_save.append(return_value)
 
-    async def process_queue(self):
+    async def process_queue(self, conn):
         while True:
-            print('ok')
-
+            for i in CONST_ARR:
+                data = get_frame(i)
+                print(data)
+                db.insert_data(data, conn)
             await asyncio.sleep(1)
 
     async def start_background_tasks(self, app):
-        app['dispatch'] = app.loop.create_task(self.process_queue())
+        app['dispatch'] = app.loop.create_task(self.process_queue(app['db']))
 
     async def cleanup_background_tasks(self, app):
         app['dispatch'].cancel()
@@ -67,8 +71,8 @@ class ScraperServer:
     async def create_app(self):
         app = web.Application()
         app['config'] = config
-        app.on_startup.append(init_pg)
-        app.on_cleanup.append(close_pg)
+        app.on_startup.append(db.init_pg)
+        app.on_cleanup.append(db.close_pg)
         setup_routes(app)
         return app
 

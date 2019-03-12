@@ -105,7 +105,7 @@ def del_all_tabs():
     con.execute(state_dev.delete())
 
 
-con, meta = connect('postgres', '1234', 'aiohttpdemo_polls')
+con, meta = connect('postgres', 'nbhyfyjun', 'aiohttpdemo_polls')
 print(con)
 print(meta)
 
@@ -117,7 +117,6 @@ print('=============MATCH===========')
 #con.execute(select().where(state_dev.c.device_id == 11))
 
 cursor = con.execute(state_dev.select())
-#cursor = con.execute(state_dev.select())
 d = datetime.datetime(2019,1,10)
 d1 = datetime.datetime.now()
 print('time1:', d.timestamp())
@@ -125,14 +124,7 @@ print('time2:', d1.timestamp())
 print(d)
 print(type(d))
 
-for row in cursor:
-     print(row)
-     print(row[4])
-     print(type(row[4]))
-     if(row[4] < d):
-         print('ok')
-     else:
-         print('not ok')
+
 
 print('time:',d)
 print('timestamp: ', d.timestamp())
@@ -140,3 +132,10 @@ k = d.timestamp()
 
 j = datetime.datetime.fromtimestamp(k)
 print(j)
+
+
+q = {'adr': 11, 'conf': 1}
+print(q['adr'])
+
+q = datetime.datetime.now()
+print(q)
