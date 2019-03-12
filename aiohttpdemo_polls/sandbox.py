@@ -110,7 +110,7 @@ print(con)
 print(meta)
 
 print('=============ALL COL===========')
-for row in con.execute(state_dev.select()):
+for row in con.execute(device.select()):
      print(row)
 
 print('=============MATCH===========')

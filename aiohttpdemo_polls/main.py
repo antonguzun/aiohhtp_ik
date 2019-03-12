@@ -53,13 +53,21 @@ class ScraperServer:
         if return_value:
             self.data_to_save.append(return_value)
 
-    async def process_queue(self, conn):
+    async def process_queue(self, engine):
         while True:
-            for i in CONST_ARR:
-                data = get_frame(i)
-                print(data)
-                db.insert_data(data, conn)
+            async with engine.acquire() as conn:
+                for i in CONST_ARR:
+                    data = get_frame(i)
+                    print(data)
+                    await conn.execute(db.state_dev.insert().values(device_id=data['address'],
+                           states_of_rays=data['rays'], power=data['power'], pub_date=data['time']))
+                    #a = await conn.execute(db.state_dev.select())
+                    #for row in a:
+                    #    print(row)
+
+
             await asyncio.sleep(1)
+
 
     async def start_background_tasks(self, app):
         app['dispatch'] = app.loop.create_task(self.process_queue(app['db']))
