@@ -2,9 +2,9 @@
 import aiopg.sa
 from sqlalchemy import (
     MetaData, Table, Column, ForeignKey,
-    Integer, String, Date, DateTime, Boolean, Float
+    Integer, String, DateTime, Boolean, Float
 )
-import datetime
+
 
 meta = MetaData()
 
@@ -14,7 +14,7 @@ perimeter = Table(
 
     Column('id', Integer, primary_key=True),
     Column('number', Integer, nullable=False),
-    Column('enabled', Boolean, nullable=False),               #1 - on, 0 - off
+    Column('enabled', Boolean, nullable=False),                 # 1 - on, 0 - off
     Column('time_last_change_state', DateTime, nullable=False)
 )
 
@@ -65,10 +65,6 @@ async def close_pg(app):
 
 async def insert_data(data, engine):
     async with engine.acquire() as conn:
-            await conn.execute(state_dev.insert(), [
+        await conn.execute(state_dev.insert(), [
             {'device_id': data['address'], 'states_of_rays': data['rays'],
-            'power': data['power'], 'pub_date': data['time']},
-        ])
-
-
-
+             'power': data['power'], 'pub_date': data['time']}, ])

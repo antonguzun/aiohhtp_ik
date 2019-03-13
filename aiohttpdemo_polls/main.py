@@ -9,7 +9,8 @@ from routes import setup_routes
 import db
 from com.__main__ import get_frame
 
-CONST_ARR = [i for i in range(11,19)]
+CONST_ARR = [i for i in range(11, 19)]
+
 
 async def post_request(url, json, proxy=None):
     async with ClientSession() as client:
@@ -54,20 +55,23 @@ class ScraperServer:
             self.data_to_save.append(return_value)
 
     async def process_queue(self, engine):
+        """
+        Async fun, work parallel with main server app
+        This fun take data from com port(com settings are set in .com.com.py)
+        and push it into db
+        :param engine: engine of SQLAlchemy
+        :return: nothing
+        """
         while True:
             async with engine.acquire() as conn:
                 for i in CONST_ARR:
                     data = get_frame(i)
-                    #print(data)
-                    await conn.execute(db.state_dev.insert().values(device_id=data['address'],
-                           states_of_rays=data['rays'], power=data['power'], pub_date=data['time']))
-                    #a = await conn.execute(db.state_dev.select())
-                    #for row in a:
-                    #    print(row)
-
-
-            await asyncio.sleep(1)
-
+                    await conn.execute(
+                        db.state_dev.insert().values(device_id=data['address'],
+                                                     states_of_rays=data['rays'],
+                                                     power=data['power'],
+                                                     pub_date=data['time']))
+            await asyncio.sleep(0.01)
 
     async def start_background_tasks(self, app):
         app['dispatch'] = app.loop.create_task(self.process_queue(app['db']))

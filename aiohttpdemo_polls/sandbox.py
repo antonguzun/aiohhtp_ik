@@ -2,8 +2,7 @@
 import aiopg.sa
 from sqlalchemy import (
     MetaData, Table, Column, ForeignKey,
-    Integer, String, Date, Boolean, Float, create_engine,
-    select, delete, insert,bindparam
+    Integer, String, Date, Boolean, Float, create_engine
 )
 import datetime
 
@@ -15,7 +14,7 @@ perimeter = Table(
 
     Column('id', Integer, primary_key=True),
     Column('number', Integer, nullable=False),
-    Column('enabled', Boolean, nullable=False),               #1 - on, 0 - off
+    Column('enabled', Boolean, nullable=False),               # 1 - on, 0 - off
     Column('time_last_change_state', Date, nullable=False)
 )
 
@@ -117,7 +116,7 @@ print('=============MATCH===========')
 #con.execute(select().where(state_dev.c.device_id == 11))
 
 cursor = con.execute(state_dev.select())
-d = datetime.datetime(2019,1,10)
+d = datetime.datetime(2019,3,13,13,30,00)
 d1 = datetime.datetime.now()
 print('time1:', d.timestamp())
 print('time2:', d1.timestamp())

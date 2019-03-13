@@ -6,9 +6,7 @@ def decode(arr: bytes):
     :param arr: 24 bytes from com port
     :return: collection of data
     """
-    arr_rays = []
     rays = ''
-    k = 0
     for i in range(1, 19):
         if arr[i] & 0b11000000 == 0b11000000:
             rays += 'n'
