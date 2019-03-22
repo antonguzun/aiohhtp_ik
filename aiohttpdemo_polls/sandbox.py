@@ -4,44 +4,12 @@ from sqlalchemy import (
     MetaData, Table, Column, ForeignKey,
     Integer, String, Date, Boolean, Float, create_engine
 )
+from db import perimeter, state_dev, device
 import datetime
 
 meta = MetaData()
 
 
-perimeter = Table(
-    'perimeter', meta,
-
-    Column('id', Integer, primary_key=True),
-    Column('number', Integer, nullable=False),
-    Column('enabled', Boolean, nullable=False),               # 1 - on, 0 - off
-    Column('time_last_change_state', Date, nullable=False)
-)
-
-
-device = Table(
-    'device', meta,
-
-    Column('id', Integer, primary_key=True),
-    Column('address', Integer, nullable=False),
-    Column('perimeter_id',
-           Integer,
-           ForeignKey('perimeter.id', ondelete='CASCADE')),
-    Column('configuration', Integer, nullable=False),
-    Column('enabled', Boolean, nullable=False)
-)
-
-state_dev = Table(
-    'state_of_device', meta,
-
-    Column('id', Integer, primary_key=True),
-    Column('device_id',
-           Integer,
-           ForeignKey('device.id', ondelete='CASCADE')),
-    Column('states_of_rays', String(144), nullable=False),
-    Column('power', Float, nullable=False),
-    Column('pub_date', Date, nullable=False)
-)
 
 
 async def init_pg(app):
@@ -103,19 +71,43 @@ def del_all_tabs():
     con.execute(device.delete())
     con.execute(state_dev.delete())
 
+def show_dev():
+    for row in con.execute(device.select()):
+        print(row)
+
+def show_perim():
+    for row in con.execute(state_dev.select()):
+        print(row)
+
+def show_states():
+    for row in con.execute(perimeter.select()):
+        print(row)
 
 con, meta = connect('postgres', 'nbhyfyjun', 'aiohttpdemo_polls')
 print(con)
 print(meta)
 
-print('=============ALL COL===========')
-for row in con.execute(device.select()):
-     print(row)
+print('=============ALL ROWS DEVICES===========')
+show_dev()
+print('=============ALL ROWS PERIMETERS===========')
+show_perim()
+print('=============ALL ROWS STATES===========')
+show_states()
 
 print('=============MATCH===========')
-#con.execute(select().where(state_dev.c.device_id == 11))
+cursor = con.execute(perimeter.select().where(perimeter.c.name == 'Главный'))
+records = cursor.fetchall()
+if records:
+    print(records)
+    con.execute(
+        perimeter.update().values(devices='11,12').where(
+            perimeter.c.name == 'Главный'))
+    cursor = con.execute(perimeter.select().where(perimeter.c.name == 'Главный'))
+    records = cursor.fetchall()
+    print(records)
+else:
+    print('Dict is empty')
 
-cursor = con.execute(state_dev.select())
 d = datetime.datetime(2019,3,13,13,30,00)
 d1 = datetime.datetime.now()
 print('time1:', d.timestamp())

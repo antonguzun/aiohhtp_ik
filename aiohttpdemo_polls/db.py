@@ -13,9 +13,8 @@ perimeter = Table(
     'perimeter', meta,
 
     Column('id', Integer, primary_key=True),
-    Column('number', Integer, nullable=False),
-    Column('enabled', Boolean, nullable=False),                 # 1 - on, 0 - off
-    Column('time_last_change_state', DateTime, nullable=False)
+    Column('name', String(100), nullable=False),
+    Column('devices', String(400), nullable=False)
 )
 
 
@@ -24,11 +23,7 @@ device = Table(
 
     Column('id', Integer, primary_key=True, nullable=False),
     Column('address', Integer, nullable=False),
-    Column('perimeter_id',
-           Integer,
-           ForeignKey('perimeter.id', ondelete='CASCADE')),
-    Column('configuration', Integer, nullable=False),
-    Column('enabled', Boolean, nullable=False)
+    Column('configuration', Integer, nullable=False)
 )
 
 state_dev = Table(

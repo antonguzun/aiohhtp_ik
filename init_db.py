@@ -21,10 +21,8 @@ def drop_tables(engine):
 def sample_data(engine):
     conn = engine.connect()
     conn.execute(perimeter.insert(), [
-        {'id': 1,
-         'number': 1,
-         'enabled': 1,
-         'time_last_change_state': '2019-03-15 20:00:12.629+02'}
+        {'name': 'Главный', 'devices': '11,12,13,14,15'},
+        {'name': 'Побочный', 'devices': '16,17,18'},
     ])
     conn.execute(device.insert(), [
         {'id': 11, 'address': '11', 'perimeter_id': 1, 'configuration': 72, 'enabled': 1},
@@ -35,7 +33,6 @@ def sample_data(engine):
         {'id': 16, 'address': '16', 'perimeter_id': 1, 'configuration': 72, 'enabled': 1},
         {'id': 17, 'address': '17', 'perimeter_id': 1, 'configuration': 72, 'enabled': 1},
         {'id': 18, 'address': '18', 'perimeter_id': 1, 'configuration': 72, 'enabled': 1},
-
     ])
     conn.execute(state_dev.insert(), [
         {'device_id': '11', 'states_of_rays': ('n'*72),
@@ -43,6 +40,8 @@ def sample_data(engine):
         {'device_id': '11', 'states_of_rays': ('n'*72),
          'power': 100, 'pub_date': '2015-12-15 15:30:51.234+02'},
         {'device_id': '11', 'states_of_rays': ('n'*72),
+         'power': 100, 'pub_date': '2019-03-15 20:00:12.629+02'},
+        {'device_id': '12', 'states_of_rays': ('n' * 72),
          'power': 100, 'pub_date': '2019-03-15 20:00:12.629+02'},
     ])
 
