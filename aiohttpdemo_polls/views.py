@@ -20,10 +20,10 @@ async def create_perimeter(request):
     """
     async with request.app['db'].acquire() as conn:
         try:
+
             body = await request.read()
             body.decode('utf-8')
             data = json.loads(body)
-
             if 'id' in data:
                 cursor = await conn.execute(perimeter.select().where(perimeter.c.id == data['id']))
                 match_the_id = await cursor.fetchall()
@@ -33,8 +33,8 @@ async def create_perimeter(request):
                                         status=400)
 
                 await conn.execute(perimeter.insert().values(id=data['id'],
-                                          name=data['name'],
-                                          devices=data['devices']))
+                                                             name=data['name'],
+                                                             devices=data['devices']))
             else:
                 cursor = await conn.execute(perimeter.select().where(perimeter.c.name == data['name']))
                 match_the_name = await cursor.fetchall()
@@ -44,7 +44,7 @@ async def create_perimeter(request):
                                         status=400)
 
                 await conn.execute(perimeter.insert().values(name=data['name'],
-                                          devices=data['devices']))
+                                                             devices=data['devices']))
 
             return web.Response(text=json.dumps(data, indent=4, sort_keys=False, default=str), status=200)
         except Exception as e:
@@ -65,14 +65,15 @@ async def delete_perimeter(request):
             body = await request.read()
             body.decode('utf-8')
             data = json.loads(body)
-            if 'id' in data:
-                await conn.execute(perimeter.delete().where(perimeter.c.id == int(data['id'])))
-                return web.Response(text=json.dumps(data), status=200)
-            if 'name' in data:
-                await conn.execute(perimeter.delete().where(perimeter.c.name == data['name']))
-                return web.Response(text=json.dumps(data), status=200)
-            response_obj = {'status': 'failed', 'reason': 'hz'}
-            return web.Response(text=json.dumps(response_obj), status=500)
+            cursor = await conn.execute(perimeter.delete().where(perimeter.c.id == int(data['id'])))
+            has_row = json.loads(cursor)
+            if has_row:
+                response_obj = {'status': 'failed', 'reason': 'hz'}
+                return web.Response(text=json.dumps(response_obj), status=500)
+            else:
+                data = create_perimeter(request)
+                print(data)
+
         except Exception as e:
             response_obj = {'status': 'failed', 'reason': str(e)}
             return web.Response(text=json.dumps(response_obj), status=500)
@@ -81,15 +82,34 @@ async def delete_perimeter(request):
 async def update_perimeter(request):
     async with request.app['db'].acquire() as conn:
         try:
-            print("updating perimeter: ")
-            response_obj = {'status': 'success'}
-            return web.Response(text=json.dumps(response_obj), status=200)
+            body = await request.read()
+            body.decode('utf-8')
+            data = json.loads(body)
+
+            cursor = await conn.execute(perimeter.select().where(perimeter.c.id == data['id']))
+            match_the_id = await cursor.fetchall()
+            print(match_the_id)
+            if match_the_id:
+                await conn.execute(perimeter.update().values(name=data['name'],
+                                                             devices=data['devices']))
+                return web.Response(text=json.dumps(data), status=200)
+            else:
+                await conn.execute(perimeter.insert().values(id=data['id'],
+                                                             name=data['name'],
+                                                             devices=data['devices']))
+                return web.Response(text=json.dumps(data), status=200)
+
         except Exception as e:
             response_obj = {'status': 'failed', 'reason': str(e)}
             return web.Response(text=json.dumps(response_obj), status=500)
 
 
 async def read_all_perimeters(request):
+    """
+    get all table 'perimeter'
+    :param request: None
+    :return: json response with all table 'perimeter'
+    """
     async with request.app['db'].acquire() as conn:
         try:
             cursor = await conn.execute(perimeter.select())
